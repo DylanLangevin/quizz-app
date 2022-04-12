@@ -11,6 +11,7 @@ let questions = [
     "Quelle est la capitale de la Slovénie ?",
     "Combien d'habitants compte l'Irlande en 2020 ?"
 ]
+
 let allAnswers = [
 
     ["Clovis","Abraham Lincoln","Napoleon Bonaparte"],
@@ -19,6 +20,7 @@ let allAnswers = [
     ["Ljubljana","Belgrade","Bratislava"],
     ["1,365 Million","21 Millions","4,9 Millions"],
 ]
+
 let allCorrectAnswers = [
 
     "Napoleon Bonaparte",
@@ -26,15 +28,16 @@ let allCorrectAnswers = [
     "395 ap. J.-C",
     "Ljubljana",
     "4,9 Millions"
-
 ]
 
-
 let randomNumber = Math.floor(Math.random() * questions.length)
+
 // Creation du HTML
 const questionsDiv = document.createElement("div");
 
 function createQuestionDiv(randomNumber) {
+
+    console.log("good",allCorrectAnswers[randomNumber]);
     console.log("score :",score);
     questionsDiv.innerHTML = `
     <h4> Manche ${score} </h4>
@@ -56,56 +59,47 @@ function createQuestionDiv(randomNumber) {
                     
             </div>
         </div>
-
-        <button id="validate-btn">Valider</button>
     </form>
 
     `
     mainDiv.appendChild(questionsDiv)
-    console.log(allCorrectAnswers[randomNumber]);
+    
     
 }
 
 createQuestionDiv(randomNumber)
 
-
 // Déclaration de variable après création du HTML
 const validateBtn = document.getElementById('validate-btn')
 const form = document.getElementById('form-quiz')
 
-// Vérification de la réponse au submit du form 
-
-
-
 
 validateBtn.onclick = function(e){
+    // Récupération du radio button checked
     const radioButtonsChecked = document.querySelector('input[name="question-1"]:checked').value;
-    e.preventDefault();
+
+    console.log("notre réponse", radioButtonsChecked);
+    // e.preventDefault();
+
     console.log(randomNumber);
 
-    
+    // condition si la réponse est bonne
     if (radioButtonsChecked == allCorrectAnswers[randomNumber]) {
 
         // Passer a la manche supérieure
         score+=1
-        array.push(true)
+        // array.push(true)
+        randomNumber = Math.floor(Math.random() * questions.length)
+        createQuestionDiv(randomNumber)
 
         console.log("Bonne réponse");
         
     } else {
-        // Faire apparaitre un écran de LOSE et proposer de recommencer
 
-        array.push(true)
+
         console.log("Mauvaise réponse");
+        location.reload();
     }
-
-    if(array[array.length - 1]){
-        let randomNumber = Math.floor(Math.random() * questions.length)
-        createQuestionDiv(randomNumber)
-        
-    }
-
-
 }
 
 
