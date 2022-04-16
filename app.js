@@ -25,7 +25,6 @@ const label3 = document.getElementById("label-3")
 
 const validateBtn = document.getElementById('validate-btn')
 
-console.log(questionContainerDiv);
 
 // Déclaration des variables
 let category;
@@ -41,7 +40,6 @@ function fetchQuestion(){
     fetch("https://the-trivia-api.com/questions?categories=arts_and_literature,film_and_tv,food_and_drink,general_knowledge,geography,history,music,science,society_and_culture,sport_and_leisure&limit=1")
     .then(reponse => reponse.json())
     .then((quiz) => {
-        console.log(quiz);
         fetchQuestionComplet(quiz)
         createQuestionDiv()
     })
@@ -58,6 +56,15 @@ function fetchQuestionComplet(quiz) {
     category = quiz[0].category
     correctAnswer = quiz[0].correctAnswer
     question = quiz[0].question
+    difficulty = quiz[0].difficulty
+    tags = quiz[0].tags
+
+    console.log(quiz);
+    console.log(tags);
+    console.log(difficulty);
+    console.log(category);
+    console.log(question);
+    console.log(correctAnswer);
 
     // Injection des mauvaises réponses d'abord
     for (let i = 0; i<2; i++){
@@ -113,9 +120,13 @@ function answerReveal(text, backgroundColor, revealTextButton){
         questionH4.textContent = "La bonne réponse est " + correctAnswer + ".  " + text
         questionContainerDiv.style.backgroundColor = backgroundColor
 
+        // Centre le H4
+        // questionContainerDiv.style.justifyContent = "space-around"
+
         // Fait disparaître le bouton valider
         validateBtn.style.visibility = "hidden"
         document.querySelector('.answer-container').style.visibility = "hidden"
+
 
         // Cree le bouton "Continuer" ou"recommencer" (en fonction du résultat)
         let revealButton = document.createElement('button')
@@ -152,6 +163,7 @@ function answerReveal(text, backgroundColor, revealTextButton){
 }
 
 fetchQuestion()
+
 
 // Au clique du bouton
 validateBtn.onclick = function(e){
