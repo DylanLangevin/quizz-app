@@ -20,6 +20,13 @@ body {
     flex-direction: column;
 }
 
+#box-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
 .question-container {
 
     width: 500px;
@@ -29,6 +36,27 @@ body {
     border-radius: 7px;
     padding: 10px;
     margin: 10px;
+    
+}
+
+
+/* Box contenant le résultat du quiz avec un bouton continue et retry */
+.reveal-container {
+
+    width: 500px;
+    max-width: 500px;
+    height: fit-content;
+    box-shadow: 1px 1px 5px grey;
+    border-radius: 7px;
+    padding: 10px;
+    margin: 10px;
+    
+    border: brown 1px solid;
+}
+
+.reveal-container-button {
+    width: 200px;
+    height: 40px;
 }
 
 .answer-container {
