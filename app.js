@@ -1,7 +1,6 @@
 // REFLECHIR A LA SUITE DU PROJET
 
 
-
 // API que j'utilise
 // https://the-trivia-api.com/docs/
 
@@ -22,6 +21,11 @@ const label1 = document.getElementById("label-1")
 const label2 = document.getElementById("label-2")
 const label3 = document.getElementById("label-3")
 
+const labelEasy = document.getElementById('label-easy')
+const labelMedium = document.getElementById('label-medium')
+const labelHard = document.getElementById('label-hard')
+
+const playBtn = document.getElementById("play-btn")
 
 const validateBtn = document.getElementById('validate-btn')
 
@@ -33,11 +37,15 @@ let question;
 let incorrectAnswers = [];
 let allAnswers = [];
 let score = 1
+let themesPicked = "";
+let difficultyPicked= "";
+
 
 // Requête fetch de l'API
 function fetchQuestion(){
 
-    fetch("https://the-trivia-api.com/questions?categories=arts_and_literature,film_and_tv,food_and_drink,general_knowledge,geography,history,music,science,society_and_culture,sport_and_leisure&limit=1")
+    console.log(difficultyPicked);
+    fetch("https://the-trivia-api.com/questions?categories=" + themesPicked.slice(0, -1) + "&limit=1&difficulty=" + difficultyPicked)
     .then(reponse => reponse.json())
     .then((quiz) => {
         fetchQuestionComplet(quiz)
@@ -99,7 +107,7 @@ function createQuestionDiv() {
     label3.textContent = String(allAnswers[2])
 }
 
-function answerReveal(text, backgroundColor, revealTextButton){
+function answerReveal(text, backgroundColor, revealTextButton,){
     // Changement de la classe pour changer l'affichage
 
     // Mode question
@@ -108,13 +116,14 @@ function answerReveal(text, backgroundColor, revealTextButton){
         questionContainerDiv.classList.remove('reveal-container')
         questionH4.textContent = text
 
-
     // Mode reveal
     } else if (questionContainerDiv.classList.contains('question-container')) {
+        console.log("here");
 
         // Ajout de la class reveal-container, retrait de la classe question-container, permet d'afficher la réponse
         questionContainerDiv.classList.add('reveal-container')
         questionContainerDiv.classList.remove('question-container')
+        console.log(questionContainerDiv);
 
         // Affiche la réponse et change la couleur du background
         questionH4.textContent = "La bonne réponse est " + correctAnswer + ".  " + text
@@ -133,9 +142,12 @@ function answerReveal(text, backgroundColor, revealTextButton){
         revealButton.classList.add('reveal-container-button')
         revealButton.textContent = revealTextButton
         questionContainerDiv.appendChild(revealButton)
+        revealButton.style.visibility = "visible"
+        revealButton.style.zIndex = "200"
+        console.log(revealButton);
 
 
-        revealButton.onclick = function(e) {
+        revealButton.onclick = function(e ) {
             e.preventDefault()
 
             // Au click du bouton "continuer", on ajuste le contenu de la page pour que la prochaine question autre question puisse s'affiche, on effectue l'opération inverse du else if "Mode Reveal", puis on appelle la fonction fetch pour afficher la prochaien question
@@ -155,17 +167,57 @@ function answerReveal(text, backgroundColor, revealTextButton){
             } else {
                 location.reload();
             }
-            
         }
-
     }
+}
+
+
+
+
+// Au clique du bouton play
+playBtn.onclick = function(e) {
+    themesPicked = "";
+
+    difficultyPicked = document.querySelector('input[name="difficulty"]:checked').value
+    const themeCheckboxChecked = document.querySelectorAll('input[type=checkbox]:checked')
+
+    for (let i = 0; i<themeCheckboxChecked.length;i++) {
+
+        themesPicked += themeCheckboxChecked[i].value + ","
+    }
+
+    
+
+    console.log(difficultyPicked);
+    console.log(themesPicked.slice(0, -1));
+
+
+    // Passer de la homepage à la quizpage
+
+    document.getElementById('homepage-phase').style.visibility = "hidden"
+    document.getElementById('homepage-phase').style.position = "absolute"
+
+    console.log(questionContainerDiv.childNodes[3]); 
+
+    for (let i = 0; i<questionContainerDiv.childNodes.length;i++) {
+
+    console.log(questionContainerDiv.childNodes[i]); 
+    }
+
+    console.log(document.querySelector('.difficulty-choice-div'));
+    console.log(document.querySelector('.theme-choice-div'));
+    console.log(document.querySelector('#play-btn'));
+
+    // questionContainerDiv.removeChild("theme-choice-div")
+
+    document.getElementById('quiz-phase').style.visibility = "visible"
+    document.getElementById('quiz-phase').style.position = "relative"
+    fetchQuestion()
+
 
 }
 
-fetchQuestion()
-
-
-// Au clique du bouton
+// Au clique du bouton valider
 validateBtn.onclick = function(e){
     // Récupération de la valeur du bouton radio coché
     const radioButtonsChecked = document.querySelector('input[name="question-1"]:checked').value;
