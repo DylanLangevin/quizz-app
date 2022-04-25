@@ -20,7 +20,6 @@ const labelMedium = document.getElementById('label-medium')
 const labelHard = document.getElementById('label-hard')
 const playBtn = document.getElementById("play-btn")
 const validateBtn = document.getElementById('validate-btn')
-
 const timerElement = document.getElementById("timer")
 
 // Déclaration des variables
@@ -32,8 +31,8 @@ let allAnswers = [];
 let score = 1
 let themesPicked = "";
 let difficultyPicked= "";
-let timePassed = false;
-let quizRound = false;
+let roundScore = 0;
+let scorePhrase;
 
 // Requête fetch de l'API
 function fetchQuestion(){
@@ -44,7 +43,6 @@ function fetchQuestion(){
         fetchQuestionComplet(quiz)
         createQuestionDiv()
     })
-
 }
 
 // Récupération des propiétés de l'objet
@@ -61,13 +59,6 @@ function fetchQuestionComplet(quiz) {
     difficulty = quiz[0].difficulty
     tags = quiz[0].tags
 
-    console.log(quiz);
-    console.log(tags);
-    console.log(difficulty);
-    console.log(category);
-    console.log(question);
-    console.log(correctAnswer);
-
     // Injection des mauvaises réponses d'abord
     for (let i = 0; i<2; i++){
         incorrectAnswers.push(quiz[0].incorrectAnswers[i])
@@ -79,13 +70,16 @@ function fetchQuestionComplet(quiz) {
 
     // Melange la liste de réponses
     allAnswers.sort()
+
+    // TEST
+    console.log("Bonne réponse :",correctAnswer);
 }
 
 // Injection du contenu dans les balises
 function createQuestionDiv() {
     
     // Injection du score
-    roundNumber.textContent = "Manche " + score;
+    roundNumber.textContent = "Round " + score;
 
     // Injection de la question
     questionH4.textContent = String(question);
@@ -99,7 +93,7 @@ function createQuestionDiv() {
     label3.textContent = String(allAnswers[2])
 }
 
-function answerReveal(text, backgroundColor, revealTextButton,){
+function answerReveal(text, backgroundColor, revealTextButton, scorePhrase){
     // Changement de la classe pour changer l'affichage
 
     // Mode question
@@ -110,22 +104,19 @@ function answerReveal(text, backgroundColor, revealTextButton,){
 
     // Mode reveal
     } else if (questionContainerDiv.classList.contains('question-container')) {
-        console.log("here");
-
+   
         // Ajout de la class reveal-container, retrait de la classe question-container, permet d'afficher la réponse
         questionContainerDiv.classList.add('reveal-container')
         questionContainerDiv.classList.remove('question-container')
-        console.log(questionContainerDiv);
 
         // Affiche la réponse et change la couleur du background
-        questionH4.textContent = "La bonne réponse est " + correctAnswer + ".  " + text
+        questionH4.textContent = "The correct answer is " + correctAnswer + ".  " + text
         questionContainerDiv.style.backgroundColor = backgroundColor
 
         // Fait disparaître le bouton valider
-        validateBtn.style.visibility = "hidden"
+        validateBtn.style.display = "none"
         validateBtn.style.position = "absolute"
-
-        document.querySelector('.answer-container').style.visibility = "hidden"
+        document.querySelector('.answer-container').style.display = "none"
 
         // Cree le bouton "Continuer" ou"recommencer" (en fonction du résultat)
         let revealButton = document.createElement('button')
@@ -135,46 +126,104 @@ function answerReveal(text, backgroundColor, revealTextButton,){
         revealButton.style.visibility = "visible"
         revealButton.style.zIndex = "200"
         revealButton.style.alignSelf = "center"
-        console.log(revealButton);
+
+        // Cree la phrase en h4 qui va annoncer après chaque round
+        let timingAnswer = document.getElementById('score')
+        timingAnswer.style.display = "block"
+        timingAnswer.innerText = roundScore;
+        timingAnswer.style.zIndex = "200"
+        timingAnswer.style.visibility = "visible"
+        timingAnswer.innerText = scorePhrase 
 
 
-        revealButton.onclick = function(e ) {
+        revealButton.onclick = function(e) {
             e.preventDefault()
 
-            // Au click du bouton "continuer", on ajuste le contenu de la page pour que la prochaine question autre question puisse s'affiche, on effectue l'opération inverse du else if "Mode Reveal", puis on appelle la fonction fetch pour afficher la prochaien question
-            if(e.target.textContent == "Continuer ?") {
+            // Au click du bouton "continuer", on ajuste le contenu de la page pour que la prochaine question autre question puisse s'afficher, on effectue l'opération inverse du else if "Mode Reveal", puis on appelle la fonction fetch pour afficher la prochaien question
+            if(e.target.textContent == "Continue ?") {
 
                 // Le score est incrémenté de 1, et on effectue une nouvelle requête
                 score += 1
 
-                document.querySelector('.answer-container').style.visibility = "visible"
+                // // Passer du reveal à la question
+                document.querySelector('.answer-container').style.display = "block"
                 questionContainerDiv.style.backgroundColor = "white"
                 questionContainerDiv.removeChild(revealButton)
-
                 questionContainerDiv.classList.add('question-container')
                 questionContainerDiv.classList.remove('reveal-container')
 
                 // Fait disparaître le bouton valider
-                validateBtn.style.visibility = "visible"
+                validateBtn.style.display = "block"
                 validateBtn.style.position = "relative"
+                timingAnswer.style.display = "none"
+
                 fetchQuestion()
                 timer()
 
             } else {
                 location.reload();
+                
             }
         }
     }
 }
 
+// Vérification de la réponse, affichage en fonction
+function revealPhase(time) {
+
+    // Récupération de la valeur du bouton radio coché
+    const radioButtonsChecked = document.querySelector('input[name="question-1"]:checked').value;
+
+    // Entrée de la condition : si la valeur du bouton radio coché est égale à la bonne réponse
+    if (radioButtonsChecked == correctAnswer) {
+
+        roundScore += (time+1)+10
+        // Affichage du résultat en cas de bonne réponse
+        answerReveal("Nice one !  " ,"rgba(0,255,0,0.6)", "Continue ?", "Your score is " + roundScore + ". Click to continue ! ")
+    } else {
+
+        // Affichage du résultat en cas de mauvaise réponse
+        answerReveal("Oh no ! ", "rgba(255,0,0,0.6)", "Retry ?", "Your score is " + roundScore + ". Click to retry and do better ! ")
+    }
+}
+
+// Fonction du timer
+function timer(scoreRound) {
+
+    let time = 9
+    let countdown = setInterval(timeDecrease, 1000)
 
 
+    validateBtn.onclick = function(e) {
+
+        // Arrêt du chrono
+        clearInterval(countdown)
+        revealPhase(time)
+    }
+
+    // Fonction d'incrémentation du chrono
+    function timeDecrease(){
+
+        if(time === -1) {
+
+            // Arrêt du chrono
+            clearInterval(countdown)
+            revealPhase(time,scoreRound)
+
+        } else {
+
+            // Incrementation 
+            timerElement.innerText = time
+            time--
+        }
+    }
+}
 
 // Au clique du bouton play
 playBtn.onclick = function(e) {
-    themesPicked = "";
-    quizRound = true
 
+    // Vide cette variable pour pouvoir y changer le contenu après
+    themesPicked = "";
     difficultyPicked = document.querySelector('input[name="difficulty"]:checked').value
     const themeCheckboxChecked = document.querySelectorAll('input[type=checkbox]:checked')
 
@@ -183,105 +232,12 @@ playBtn.onclick = function(e) {
         themesPicked += themeCheckboxChecked[i].value + ","
     }
 
-    console.log(difficultyPicked);
-    console.log(themesPicked.slice(0, -1));
-
     // Passer de la homepage à la quizpage
     document.getElementById('homepage-phase').style.visibility = "hidden"
     document.getElementById('homepage-phase').style.position = "absolute"
-
-    console.log(questionContainerDiv.childNodes[3]); 
-
-    for (let i = 0; i<questionContainerDiv.childNodes.length;i++) {
-
-    console.log(questionContainerDiv.childNodes[i]); 
-    }
-
-    console.log(document.querySelector('.difficulty-choice-div'));
-    console.log(document.querySelector('.theme-choice-div'));
-    console.log(document.querySelector('#play-btn'));
-
-    // questionContainerDiv.removeChild("theme-choice-div")
     document.getElementById('quiz-phase').style.visibility = "visible"
     document.getElementById('quiz-phase').style.position = "relative"
 
     fetchQuestion()
     timer()
-    
-
-
-
 }
-
-
-// timer de 20 sec
-
-
-
-function revealPhase() {
-
-    // Récupération de la valeur du bouton radio coché
-    const radioButtonsChecked = document.querySelector('input[name="question-1"]:checked').value;
-
-    // Entrée de la condition : si la valeur du bouton radio coché est égale à la bonne réponse
-    if (radioButtonsChecked == correctAnswer) {
-
-        // Affichage du résultat en cas de bonne réponse
-        answerReveal("Bien joué ! " ,"rgba(0,255,0,0.6)", "Continuer ?")
-
-        
-    } else {
-
-        // Affichage du résultat en cas de mauvaise réponse
-        answerReveal("Dommage ! ", "rgba(255,0,0,0.6)", "Recommencer ?")
-    }
-}
-
-
-
-
-
-
-function timer() {
-
-    let time = 10
-    let countdown = setInterval(timeDecrease, 1000)
-
-    validateBtn.onclick = function(e) {
-
-        clearInterval(countdown)
-        revealPhase()
-    }
-
-    function timeDecrease(){
-
-        console.log(time);
-        if(time === -1) {
-
-            clearInterval(countdown)
-            revealPhase()
-
-        } else {
-
-            timerElement.innerText = time
-            time--
-        }
-    }
-}
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
