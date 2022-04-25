@@ -1,0 +1,51 @@
+/* ---------------------HOMEPAGE PHASE--------------- */
+
+// #homepage-phase {
+//     visibility: hidden;
+//     position: absolute; 
+// }    
+#box-container{
+    display: flex;
+    /* justify-content: center; */
+    /* align-items: center; */
+    flex-direction: column;
+    padding: 20px;
+}
+
+.question-container {
+
+    width: 500px;
+    max-width: 500px;
+    height: fit-content;
+    box-shadow: 1px 1px 5px grey;
+    border-radius: 7px;
+    padding: 10px;
+    margin: 10px;
+    
+}
+
+.difficulty-choice-div, .theme-choice-div {
+    padding: 10px;
+    /* margin: 10px; */
+}
+
+.theme-choice-div {
+
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr; 
+    gap: 0px 0px; 
+    grid-template-areas: 
+    ". ."
+    ". ."
+    ". ."
+    ". ."
+    ". ."
+    "."; 
+
+}
+
+#play-btn {
+    width: 200px;
+    height: 40px;
+}

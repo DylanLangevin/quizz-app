@@ -1,6 +1,3 @@
-// REFLECHIR A LA SUITE DU PROJET
-
-
 // API que j'utilise
 // https://the-trivia-api.com/docs/
 
@@ -12,23 +9,19 @@ const mainDiv = document.getElementById("main")
 const roundNumber = document.getElementById("round")
 const questionContainerDiv = document.getElementById('box-container')
 const questionH4 = document.getElementById("question")
-
 const answer1 = document.getElementById("answer-1")
 const answer2 = document.getElementById("answer-2")
 const answer3 = document.getElementById("answer-3")
-
 const label1 = document.getElementById("label-1")
 const label2 = document.getElementById("label-2")
 const label3 = document.getElementById("label-3")
-
 const labelEasy = document.getElementById('label-easy')
 const labelMedium = document.getElementById('label-medium')
 const labelHard = document.getElementById('label-hard')
-
 const playBtn = document.getElementById("play-btn")
-
 const validateBtn = document.getElementById('validate-btn')
 
+const timerElement = document.getElementById("timer")
 
 // Déclaration des variables
 let category;
@@ -39,18 +32,19 @@ let allAnswers = [];
 let score = 1
 let themesPicked = "";
 let difficultyPicked= "";
-
+let timePassed = false;
+let quizRound = false;
 
 // Requête fetch de l'API
 function fetchQuestion(){
 
-    console.log(difficultyPicked);
     fetch("https://the-trivia-api.com/questions?categories=" + themesPicked.slice(0, -1) + "&limit=1&difficulty=" + difficultyPicked)
     .then(reponse => reponse.json())
     .then((quiz) => {
         fetchQuestionComplet(quiz)
         createQuestionDiv()
     })
+
 }
 
 // Récupération des propiétés de l'objet
@@ -99,10 +93,8 @@ function createQuestionDiv() {
     // Injection des réponses
     answer1.value = String(allAnswers[0])
     label1.textContent = String(allAnswers[0])
-
     answer2.value = String(allAnswers[1])
     label2.textContent = String(allAnswers[1])
-
     answer3.value = String(allAnswers[2])
     label3.textContent = String(allAnswers[2])
 }
@@ -129,13 +121,11 @@ function answerReveal(text, backgroundColor, revealTextButton,){
         questionH4.textContent = "La bonne réponse est " + correctAnswer + ".  " + text
         questionContainerDiv.style.backgroundColor = backgroundColor
 
-        // Centre le H4
-        // questionContainerDiv.style.justifyContent = "space-around"
-
         // Fait disparaître le bouton valider
         validateBtn.style.visibility = "hidden"
-        document.querySelector('.answer-container').style.visibility = "hidden"
+        validateBtn.style.position = "absolute"
 
+        document.querySelector('.answer-container').style.visibility = "hidden"
 
         // Cree le bouton "Continuer" ou"recommencer" (en fonction du résultat)
         let revealButton = document.createElement('button')
@@ -144,6 +134,7 @@ function answerReveal(text, backgroundColor, revealTextButton,){
         questionContainerDiv.appendChild(revealButton)
         revealButton.style.visibility = "visible"
         revealButton.style.zIndex = "200"
+        revealButton.style.alignSelf = "center"
         console.log(revealButton);
 
 
@@ -155,14 +146,19 @@ function answerReveal(text, backgroundColor, revealTextButton,){
 
                 // Le score est incrémenté de 1, et on effectue une nouvelle requête
                 score += 1
-                validateBtn.style.visibility = "visible"
+
                 document.querySelector('.answer-container').style.visibility = "visible"
                 questionContainerDiv.style.backgroundColor = "white"
                 questionContainerDiv.removeChild(revealButton)
 
                 questionContainerDiv.classList.add('question-container')
                 questionContainerDiv.classList.remove('reveal-container')
+
+                // Fait disparaître le bouton valider
+                validateBtn.style.visibility = "visible"
+                validateBtn.style.position = "relative"
                 fetchQuestion()
+                timer()
 
             } else {
                 location.reload();
@@ -177,6 +173,7 @@ function answerReveal(text, backgroundColor, revealTextButton,){
 // Au clique du bouton play
 playBtn.onclick = function(e) {
     themesPicked = "";
+    quizRound = true
 
     difficultyPicked = document.querySelector('input[name="difficulty"]:checked').value
     const themeCheckboxChecked = document.querySelectorAll('input[type=checkbox]:checked')
@@ -186,14 +183,10 @@ playBtn.onclick = function(e) {
         themesPicked += themeCheckboxChecked[i].value + ","
     }
 
-    
-
     console.log(difficultyPicked);
     console.log(themesPicked.slice(0, -1));
 
-
     // Passer de la homepage à la quizpage
-
     document.getElementById('homepage-phase').style.visibility = "hidden"
     document.getElementById('homepage-phase').style.position = "absolute"
 
@@ -209,16 +202,24 @@ playBtn.onclick = function(e) {
     console.log(document.querySelector('#play-btn'));
 
     // questionContainerDiv.removeChild("theme-choice-div")
-
     document.getElementById('quiz-phase').style.visibility = "visible"
     document.getElementById('quiz-phase').style.position = "relative"
+
     fetchQuestion()
+    timer()
+    
+
 
 
 }
 
-// Au clique du bouton valider
-validateBtn.onclick = function(e){
+
+// timer de 20 sec
+
+
+
+function revealPhase() {
+
     // Récupération de la valeur du bouton radio coché
     const radioButtonsChecked = document.querySelector('input[name="question-1"]:checked').value;
 
@@ -234,5 +235,53 @@ validateBtn.onclick = function(e){
         // Affichage du résultat en cas de mauvaise réponse
         answerReveal("Dommage ! ", "rgba(255,0,0,0.6)", "Recommencer ?")
     }
-
 }
+
+
+
+
+
+
+function timer() {
+
+    let time = 10
+    let countdown = setInterval(timeDecrease, 1000)
+
+    validateBtn.onclick = function(e) {
+
+        clearInterval(countdown)
+        revealPhase()
+    }
+
+    function timeDecrease(){
+
+        console.log(time);
+        if(time === -1) {
+
+            clearInterval(countdown)
+            revealPhase()
+
+        } else {
+
+            timerElement.innerText = time
+            time--
+        }
+    }
+}
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
