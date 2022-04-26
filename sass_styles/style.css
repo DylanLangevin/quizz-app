@@ -1,5 +1,7 @@
 @charset "UTF-8";
 /* ---------------------HOMEPAGE PHASE--------------- */
+@import url("https://fonts.googleapis.com/css2?family=Heebo:wght@100&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Assistant:wght@200;800&family=Heebo:wght@100&display=swap");
 #box-container {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -11,6 +13,8 @@
       -ms-flex-direction: column;
           flex-direction: column;
   padding: 20px;
+  border: 2px white solid;
+  border-radius: 15px;
 }
 
 .question-container {
@@ -19,16 +23,26 @@
   height: -webkit-fit-content;
   height: -moz-fit-content;
   height: fit-content;
-  -webkit-box-shadow: 1px 1px 5px grey;
-          box-shadow: 1px 1px 5px grey;
   border-radius: 7px;
   padding: 10px;
   margin: 10px;
 }
 
 .difficulty-choice-div, .theme-choice-div {
-  padding: 10px;
-  /* margin: 10px; */
+  margin: 10px 10px;
+}
+
+.difficulty-choice-div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin: 10px 10px;
 }
 
 .theme-choice-div {
@@ -120,6 +134,7 @@ form {
 }
 
 body {
+  background-color: #3C6790;
   font-family: Arial, Helvetica, sans-serif;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -135,6 +150,18 @@ body {
       -ms-flex-direction: column;
           flex-direction: column;
   height: 100vh;
+}
+
+main #h1-general-culture {
+  -ms-flex-item-align: start;
+      align-self: flex-start;
+  font-size: 54px;
+}
+
+main #h1-quiz {
+  -ms-flex-item-align: end;
+      align-self: flex-end;
+  font-size: 54px;
 }
 
 .echec {
@@ -170,5 +197,90 @@ body {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
+}
+
+.flex-input {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+h1 {
+  font-family: 'Assistant';
+  color: white;
+}
+
+h4 {
+  font-family: 'Heebo';
+  color: white;
+  font-size: 24px;
+}
+
+label {
+  font-family: 'Heebo';
+  color: white;
+  font-size: 18px;
+  margin-left: 10px;
+}
+
+button {
+  color: white;
+  background-color: transparent;
+  border: 1px solid white;
+  border-radius: 8px;
+  font-family: 'Heebo';
+}
+
+input[type='radio']:after {
+  width: 15px;
+  height: 15px;
+  border-radius: 15px;
+  top: -2px;
+  left: -1px;
+  position: relative;
+  background-color: #3C6790;
+  content: '';
+  display: inline-block;
+  border: 1px solid white;
+}
+
+input[type='radio']:checked:after {
+  width: 15px;
+  height: 15px;
+  border-radius: 15px;
+  top: -2px;
+  left: -1px;
+  position: relative;
+  background-color: white;
+  content: '';
+}
+
+input[type='checkbox']:after {
+  width: 15px;
+  height: 15px;
+  border-radius: 3px;
+  top: -2px;
+  left: -1px;
+  position: relative;
+  background-color: #3C6790;
+  content: '';
+  display: inline-block;
+  border: 1px solid white;
+}
+
+input[type='checkbox']:checked:after {
+  width: 15px;
+  height: 15px;
+  border-radius: 3px;
+  top: -2px;
+  left: -1px;
+  position: relative;
+  background-color: white;
+  content: '';
+  display: block;
+  color: #3C6790;
 }
 /*# sourceMappingURL=style.css.map */

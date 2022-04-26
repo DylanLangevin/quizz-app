@@ -18,6 +18,9 @@ const label3 = document.getElementById("label-3")
 const labelEasy = document.getElementById('label-easy')
 const labelMedium = document.getElementById('label-medium')
 const labelHard = document.getElementById('label-hard')
+const inputEasy = document.getElementById('input-easy')
+const inputMedium = document.getElementById('input-medium')
+const inputHard = document.getElementById('input-hard')
 const playBtn = document.getElementById("play-btn")
 const validateBtn = document.getElementById('validate-btn')
 const timerElement = document.getElementById("timer")
@@ -91,6 +94,9 @@ function createQuestionDiv() {
     label2.textContent = String(allAnswers[1])
     answer3.value = String(allAnswers[2])
     label3.textContent = String(allAnswers[2])
+
+    
+    
 }
 
 function answerReveal(text, backgroundColor, revealTextButton, scorePhrase){
@@ -157,6 +163,7 @@ function answerReveal(text, backgroundColor, revealTextButton, scorePhrase){
                 validateBtn.style.position = "relative"
                 timingAnswer.style.display = "none"
 
+                
                 fetchQuestion()
                 timer()
 
@@ -222,6 +229,7 @@ function timer(scoreRound) {
 // Au clique du bouton play
 playBtn.onclick = function(e) {
 
+
     // Vide cette variable pour pouvoir y changer le contenu après
     themesPicked = "";
     difficultyPicked = document.querySelector('input[name="difficulty"]:checked').value
@@ -231,13 +239,23 @@ playBtn.onclick = function(e) {
 
         themesPicked += themeCheckboxChecked[i].value + ","
     }
+    if(themesPicked === ""){
 
-    // Passer de la homepage à la quizpage
-    document.getElementById('homepage-phase').style.visibility = "hidden"
-    document.getElementById('homepage-phase').style.position = "absolute"
-    document.getElementById('quiz-phase').style.visibility = "visible"
-    document.getElementById('quiz-phase').style.position = "relative"
+        alert("You have to chose at list one theme")
+    } else {
+        // Fait disparaître le titre "general culture quiz"
+        document.getElementById('h1-general-culture').style.display = "none"
+        document.getElementById('h1-quiz').style.display = "none"
 
-    fetchQuestion()
-    timer()
+        // Passer de la homepage à la quizpage
+        document.getElementById('homepage-phase').style.visibility = "hidden"
+        document.getElementById('homepage-phase').style.position = "absolute"
+        document.getElementById('quiz-phase').style.visibility = "visible"
+        document.getElementById('quiz-phase').style.position = "relative"
+
+
+        fetchQuestion()
+        timer()
+    }
+
 }
