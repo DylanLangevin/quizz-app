@@ -101,10 +101,6 @@ form {
   transition: background-color 0.2s ease-in-out;
 }
 
-#validate-btn :hover {
-  background-color: lightblue;
-}
-
 /* ------------PHASE REVEAL----------------- */
 /* Box contenant le résultat du quiz avec un bouton continue et retry */
 .reveal-container {
@@ -232,6 +228,16 @@ button {
   border: 1px solid white;
   border-radius: 8px;
   font-family: 'Heebo';
+  font-weight: bold;
+  -webkit-transition: .3 ease;
+  transition: .3 ease;
+}
+
+button:hover {
+  background-color: white;
+  color: #3C6790;
+  -webkit-transition: background-color 0.2s ease-in-out;
+  transition: background-color 0.2s ease-in-out;
 }
 
 input[type='radio']:after {

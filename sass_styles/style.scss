@@ -94,7 +94,18 @@ button{
     border: 1px solid white;
     border-radius:8px ;
     font-family: 'Heebo';
+    font-weight: bold;
+    transition: .3 ease;
+
+    &:hover {
+        background-color: white;
+        color: #3C6790;
+        transition: background-color 0.2s ease-in-out;
+    }
 }
+
+
+
 
 input[type='radio']:after {
 

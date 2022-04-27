@@ -37,6 +37,25 @@ let difficultyPicked= "";
 let roundScore = 0;
 let scorePhrase;
 
+// let backgroundColorsArray = [
+
+//     "#5D1D5A",
+//     "#5C61DA",
+//     "#7EA4C9", 
+//     "#FFA347", 
+//     "#3C6790"
+
+// ]
+// let randomNumber = Math.floor(Math.random() * 5)
+
+
+// document.body.style.backgroundColor = backgroundColorsArray[randomNumber]
+// document.getElementsByTagName('input').style.backgroundColor = backgroundColorsArray[randomNumber] 
+
+
+
+
+
 // Requête fetch de l'API
 function fetchQuestion(){
 
@@ -250,6 +269,7 @@ playBtn.onclick = function(e) {
         // Passer de la homepage à la quizpage
         document.getElementById('homepage-phase').style.visibility = "hidden"
         document.getElementById('homepage-phase').style.position = "absolute"
+
         document.getElementById('quiz-phase').style.visibility = "visible"
         document.getElementById('quiz-phase').style.position = "relative"
 
@@ -259,3 +279,4 @@ playBtn.onclick = function(e) {
     }
 
 }
+
